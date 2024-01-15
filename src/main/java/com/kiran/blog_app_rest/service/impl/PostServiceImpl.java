@@ -5,8 +5,13 @@ import com.kiran.blog_app_rest.payload.PostDto;
 import com.kiran.blog_app_rest.repository.PostRepository;
 import com.kiran.blog_app_rest.service.PostService;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -18,19 +23,31 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto addPost(PostDto postDto) {
         log.info("PostService executed");
-        Post post=Post.builder()
+        Post post = Post.builder()
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
                 .description(postDto.getDescription())
                 .build();
 
-        Post newPost =postRepository.save(post);
-        log.info("Post saved successfully ",newPost);
+        Post newPost = postRepository.save(post);
+        log.info("Post saved successfully ", newPost);
 
         return mapToDto(newPost);
     }
 
-    PostDto mapToDto(Post post){
+    @Override
+    public List<PostDto> findAllPosts() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        List<Post> posts = postRepository.findAll();
+        List<PostDto> postDtos = posts.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+
+        return postDtos;
+
+    }
+
+
+    PostDto mapToDto(Post post) {
         return PostDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
