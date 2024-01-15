@@ -5,11 +5,8 @@ import com.kiran.blog_app_rest.payload.PostDto;
 import com.kiran.blog_app_rest.repository.PostRepository;
 import com.kiran.blog_app_rest.service.PostService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,11 +20,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto addPost(PostDto postDto) {
         log.info("PostService executed");
-        Post post = Post.builder()
-                .title(postDto.getTitle())
-                .content(postDto.getContent())
-                .description(postDto.getDescription())
-                .build();
+        Post post = mapToEntity(postDto);
 
         Post newPost = postRepository.save(post);
         log.info("Post saved successfully ", newPost);
@@ -35,14 +28,11 @@ public class PostServiceImpl implements PostService {
         return mapToDto(newPost);
     }
 
+
     @Override
     public List<PostDto> findAllPosts() {
-        ModelMapper modelMapper = new ModelMapper();
-
         List<Post> posts = postRepository.findAll();
-        List<PostDto> postDtos = posts.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
-
-        return postDtos;
+        return posts.stream().map(post -> mapToDto(post)).collect(Collectors.toList());
 
     }
 
@@ -55,4 +45,15 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .build();
     }
+
+
+    private Post mapToEntity(PostDto postDto) {
+        return Post.builder()
+                .title(postDto.getTitle())
+                .content(postDto.getContent())
+                .description(postDto.getDescription())
+                .build();
+    }
+
+
 }
