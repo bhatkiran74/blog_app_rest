@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/post")
@@ -34,9 +33,10 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PostResponse> findPosts(
             @RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
-            @RequestParam(value = "pageSize",defaultValue = "2",required = false) int pageSize
+            @RequestParam(value = "pageSize",defaultValue = "2",required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id",required = false) String sortBy
     ){
-        return new ResponseEntity<>(postService.findAllPosts(pageNo,pageSize),HttpStatus.OK);
+        return new ResponseEntity<>(postService.findAllPosts(pageNo,pageSize,sortBy),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
