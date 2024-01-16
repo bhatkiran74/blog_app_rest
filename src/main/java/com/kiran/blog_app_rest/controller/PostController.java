@@ -1,6 +1,7 @@
 package com.kiran.blog_app_rest.controller;
 
 import com.kiran.blog_app_rest.payload.PostDto;
+import com.kiran.blog_app_rest.payload.PostResponse;
 import com.kiran.blog_app_rest.service.PostService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,18 @@ public class PostController {
         return new ResponseEntity<>(resPostDto, HttpStatus.CREATED);
     }
 
+//    without pagination and sort
+//    @GetMapping
+//    public ResponseEntity<List<PostDto>> findPosts(){
+//        return new ResponseEntity<>(postService.findAllPosts(),HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity<List<PostDto>> findPosts(){
-        return new ResponseEntity<>(postService.findAllPosts(),HttpStatus.OK);
+    public ResponseEntity<PostResponse> findPosts(
+            @RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+            @RequestParam(value = "pageSize",defaultValue = "2",required = false) int pageSize
+    ){
+        return new ResponseEntity<>(postService.findAllPosts(pageNo,pageSize),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

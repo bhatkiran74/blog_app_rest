@@ -3,6 +3,7 @@ package com.kiran.blog_app_rest.service;
 import com.kiran.blog_app_rest.entity.Post;
 import com.kiran.blog_app_rest.exception.ResourceNotFoundException;
 import com.kiran.blog_app_rest.payload.PostDto;
+import com.kiran.blog_app_rest.payload.PostResponse;
 import com.kiran.blog_app_rest.repository.PostRepository;
 import com.kiran.blog_app_rest.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,10 +58,10 @@ public class PostServiceTest {
         Page<Post> postsPage = new PageImpl<>(postsData, pageable, postsData.size());
         when(postRepository.findAll(pageable)).thenReturn(postsPage);
 
-        List<PostDto> result = postService.findAllPosts(pageNo, pageSize);
+        PostResponse result = postService.findAllPosts(pageNo, pageSize);
 
         assertNotNull(result);
-        assertEquals(postsData.size(), result.size());
+        assertEquals(postsData.size(), result.getPageSize());
 
     }
     @Test
