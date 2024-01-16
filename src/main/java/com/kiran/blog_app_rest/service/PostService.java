@@ -2,12 +2,11 @@ package com.kiran.blog_app_rest.service;
 
 
 import com.kiran.blog_app_rest.payload.PostDto;
-
-import java.util.List;
+import com.kiran.blog_app_rest.payload.PostResponse;
 
 public interface PostService {
     PostDto addPost(PostDto postDto);
-    List<PostDto> findAllPosts();
+    PostResponse findAllPosts(int pageNo, int pageSize, String sortBy);
     PostDto findPostById(long id);
     PostDto updatePost(PostDto postDto, long id);
     void deletePostById(long id);
