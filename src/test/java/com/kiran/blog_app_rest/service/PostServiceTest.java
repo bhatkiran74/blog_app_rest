@@ -41,6 +41,17 @@ public class PostServiceTest {
     }
 
     @Test
+    void testAddPost() {
+        PostDto postDto =createPostDto();
+        when(postRepository.save(any(Post.class))).thenReturn(createNewPostEntity());
+
+        PostDto result = postService.addPost(postDto);
+
+        assertNotNull(result);
+        verify(postRepository).save(any(Post.class));
+
+    }
+    @Test
     void testFindPostById(){
         PostDto expectedDto = createPostDto();
         Post expectedPost = createNewPostEntity();
@@ -52,18 +63,30 @@ public class PostServiceTest {
     @Test
     void testFindAllPosts(){
         int pageNo = 0;
-        int pageSize = 1;
-        List<Post> postsData = Arrays.asList(createNewPostEntity());
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Post> postsPage = new PageImpl<>(postsData, pageable, postsData.size());
-        when(postRepository.findAll(pageable)).thenReturn(postsPage);
+        int pageSize = 10;
+        String sortBy = "title";
+        String sortDir = "ASC";
 
-        PostResponse result = postService.findAllPosts(pageNo, pageSize, "title");
+        Page<Post> mockedPage = mock(Page.class);
+        when(mockedPage.getContent()).thenReturn(Arrays.asList(createNewPostEntity()));
+        when(mockedPage.getNumber()).thenReturn(0);
+        when(mockedPage.getSize()).thenReturn(10);
+        when(mockedPage.getTotalElements()).thenReturn(20L);
+        when(mockedPage.getTotalPages()).thenReturn(2);
+        when(postRepository.findAll(any(Pageable.class))).thenReturn(mockedPage);
 
-        assertNotNull(result);
-        assertEquals(postsData.size(), result.getPageSize());
+        PostResponse postResponse = postService.findAllPosts(pageNo, pageSize, sortBy, sortDir);
+
+        assertNotNull(postResponse);
+        assertEquals(0, postResponse.getPageNo());
+        assertEquals(10, postResponse.getPageSize());
+        assertEquals(20L, postResponse.getTotalElements());
+        assertEquals(2, postResponse.getTotalPages());
+        assertFalse(postResponse.isLast());
+        verify(postRepository).findAll(any(Pageable.class));
 
     }
+
     @Test
     void testUpdatePost() {
 

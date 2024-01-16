@@ -56,10 +56,11 @@ public class PostServiceImpl implements PostService {
      * @return a {@link PostResponse} containing the paginated list of posts
      */
     @Override
-    public PostResponse findAllPosts(int pageNo, int pageSize,String sortBy) {
+    public PostResponse findAllPosts(int pageNo, int pageSize,String sortBy,String sortDir) {
 
-//        Pageable pageable = PageRequest.of(pageNo,pageSize);
-        Pageable pageable = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo,pageSize, sort);
 
         Page<Post> posts = postRepository.findAll(pageable);
 
