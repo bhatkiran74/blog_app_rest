@@ -60,7 +60,6 @@ public class PostServiceImpl implements PostService {
 
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
 
-//        Pageable pageable = PageRequest.of(pageNo,pageSize);
         Pageable pageable = PageRequest.of(pageNo,pageSize, sort);
 
         Page<Post> posts = postRepository.findAll(pageable);
