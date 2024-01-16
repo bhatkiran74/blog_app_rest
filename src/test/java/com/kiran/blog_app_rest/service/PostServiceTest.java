@@ -58,7 +58,7 @@ public class PostServiceTest {
         Page<Post> postsPage = new PageImpl<>(postsData, pageable, postsData.size());
         when(postRepository.findAll(pageable)).thenReturn(postsPage);
 
-        PostResponse result = postService.findAllPosts(pageNo, pageSize);
+        PostResponse result = postService.findAllPosts(pageNo, pageSize, "title");
 
         assertNotNull(result);
         assertEquals(postsData.size(), result.getPageSize());
