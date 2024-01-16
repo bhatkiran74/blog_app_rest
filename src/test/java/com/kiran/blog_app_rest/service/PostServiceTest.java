@@ -52,7 +52,7 @@ public class PostServiceTest {
     @Test
     void testFindAllPosts(){
         int pageNo = 0;
-        int pageSize = 10;
+        int pageSize = 1;
         List<Post> postsData = Arrays.asList(createNewPostEntity());
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Post> postsPage = new PageImpl<>(postsData, pageable, postsData.size());
