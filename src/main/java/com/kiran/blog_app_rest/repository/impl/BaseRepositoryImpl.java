@@ -1,5 +1,6 @@
 package com.kiran.blog_app_rest.repository.impl;
 
+import com.kiran.blog_app_rest.entity.QComment;
 import com.kiran.blog_app_rest.entity.QPost;
 import com.kiran.blog_app_rest.repository.BaseRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,7 +15,8 @@ public abstract class BaseRepositoryImpl<T,ID> extends SimpleJpaRepository<T,ID>
     JPAQueryFactory jpaQueryFactory;
 
 
-    protected final QPost post=QPost.post;
+    protected final QPost post= QPost.post;
+    protected final QComment comment = QComment.comment;
 
     public BaseRepositoryImpl(Class<T> domainClass, EntityManager em) {
         super(domainClass, em);
