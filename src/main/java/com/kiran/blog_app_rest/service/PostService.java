@@ -6,7 +6,7 @@ import com.kiran.blog_app_rest.payload.PostResponse;
 
 public interface PostService {
     PostDto addPost(PostDto postDto);
-    PostResponse findAllPosts(int pageNo, int pageSize, String sortBy,String sortDir);
+    PostResponse findAllPosts(int pageNo, int pageSize, String sortBy);
     PostDto findPostById(long id);
     PostDto updatePost(PostDto postDto, long id);
     void deletePostById(long id);

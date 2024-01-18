@@ -7,9 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "post",uniqueConstraints = {@UniqueConstraint(columnNames = "title")},schema = "blog")
 @Data
@@ -28,10 +25,4 @@ public class Post {
     @Column(name = "content",nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<Comment> comments = new HashSet<>();
-
-    public Post(long id){
-        this.id = id;
-    }
 }
