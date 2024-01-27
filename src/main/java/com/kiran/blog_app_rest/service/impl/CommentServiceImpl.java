@@ -57,15 +57,21 @@ public class CommentServiceImpl implements CommentService {
         return comments.stream().map(comment -> mapToCommentDto(comment)).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a specific comment for a post based on the provided post ID and comment ID.
+     * @param postId The unique identifier of the post to which the comment belongs
+     * @param commentId The unique identifier of the comment to be retrieved
+     * @return A {@link CommentDto} representing the specified comment
+     * @throws ResourceNotFoundException If no post or comment is found with the specified IDs
+     * @throws BlogAPIException If the retrieved comment does not belong to the specified post
+     */
     @Override
     public CommentDto findCommentsByCommentId(long postId, long commentId) {
         Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post","Id",postId));
         Comment comment = commentRepository.findById(commentId).orElseThrow(()->new ResourceNotFoundException("Comment","Id",commentId));
-
         if (!comment.getPost().getId().equals(post.getId())){
             throw new BlogAPIException(HttpStatus.BAD_REQUEST,"Comment does not belog to post");
         }
-
         return mapToCommentDto(comment);
     }
 
