@@ -76,6 +76,30 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
+     * Updates a specific comment for a post based on the provided post ID, comment ID, and CommentDto.
+     * @param postId The unique identifier of the post to which the comment belongs
+     * @param commentId The unique identifier of the comment to be updated
+     * @param commentDto The data transfer object containing updated information for the comment
+     * @return A {@link CommentDto} representing the updated comment
+     * @throws ResourceNotFoundException If no post or comment is found with the specified IDs
+     * @throws BlogAPIException If the updated comment does not belong to the specified post
+     */
+    @Override
+    public CommentDto updateCommentsByCommentId(long postId, long commentId, CommentDto commentDto) {
+        Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post","Id",postId));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new ResourceNotFoundException("Comment","Id",commentId));
+        if (!comment.getPost().getId().equals(post.getId())){
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST,"Comment does not belog to post");
+        }
+        comment.setName(commentDto.getName());
+        comment.setEmail(commentDto.getEmail());
+        comment.setBody(commentDto.getBody());
+        log.info("Comment Updated...");
+        Comment updatedComment = commentRepository.save(comment);
+        return mapToCommentDto(updatedComment);
+    }
+
+    /**
      * Maps a Comment entity to a CommentDto.
      * @param comment The Comment entity to be mapped
      * @return A {@link CommentDto} representing the mapped comment
