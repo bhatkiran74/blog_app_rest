@@ -100,6 +100,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
+     * Deletes a specific comment for a post based on the provided post ID and comment ID.
+     * @param postId The unique identifier of the post to which the comment belongs
+     * @param commentId The unique identifier of the comment to be deleted
+     * @throws ResourceNotFoundException If no post or comment is found with the specified IDs
+     * @throws BlogAPIException If the comment to be deleted does not belong to the specified post
+     */
+    @Override
+    public void deleteCommentsByCommentId(long postId, long commentId) {
+        Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post","Id",postId));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new ResourceNotFoundException("Comment","Id",commentId));
+        if (!comment.getPost().getId().equals(post.getId())){
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST,"Comment does not belog to post");
+        }
+        commentRepository.delete(comment);
+    }
+
+    /**
      * Maps a Comment entity to a CommentDto.
      * @param comment The Comment entity to be mapped
      * @return A {@link CommentDto} representing the mapped comment
