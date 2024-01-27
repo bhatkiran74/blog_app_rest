@@ -11,6 +11,8 @@ import com.kiran.blog_app_rest.service.CommentService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -22,6 +24,14 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private PostRepository postRepository;
 
+    /**
+     * Creates a new comment for a post based on the provided post ID and CommentDto.
+     * @author Kiransingh Bhat
+     * @param postId The unique identifier of the post to which the comment is associated
+     * @param commentDto The data transfer object containing information about the new comment
+     * @return A {@link CommentDto} representing the newly created comment
+     * @throws ResourceNotFoundException If no post is found with the specified post ID
+     */
     @Override
     public CommentDto createComment(long postId,CommentDto commentDto) {
 
@@ -33,6 +43,24 @@ public class CommentServiceImpl implements CommentService {
         return savedDto;
     }
 
+    /**
+     * Retrieves comments associated with a post based on the provided post ID.
+     * @author Kiransingh Bhat
+     * @param postId The unique identifier of the post for which comments are to be retrieved
+     * @return A List of {@link CommentDto} representing comments for the specified post
+     * @throws ResourceNotFoundException If no comments are found for the given post ID
+     */
+    @Override
+    public List<CommentDto> findCommentsByPostId(long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        return comments.stream().map(comment -> mapToCommentDto(comment)).collect(Collectors.toList());
+    }
+
+    /**
+     * Maps a Comment entity to a CommentDto.
+     * @param comment The Comment entity to be mapped
+     * @return A {@link CommentDto} representing the mapped comment
+     */
     private CommentDto mapToCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
@@ -42,6 +70,11 @@ public class CommentServiceImpl implements CommentService {
                 .build();
     }
 
+    /**
+     * Maps a CommentDto to a Comment entity.
+     * @param commentDto The CommentDto to be mapped
+     * @return A {@link Comment} entity representing the mapped commentDto
+     */
     private Comment maptoComment(CommentDto commentDto) {
         return Comment.builder()
                 .name(commentDto.getName())
@@ -49,6 +82,4 @@ public class CommentServiceImpl implements CommentService {
                 .email(commentDto.getEmail())
                 .build();
     }
-
-
 }
