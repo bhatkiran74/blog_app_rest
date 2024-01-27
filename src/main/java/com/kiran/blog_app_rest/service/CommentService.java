@@ -7,4 +7,5 @@ public interface CommentService {
     CommentDto createComment(long postId,CommentDto commentDto);
     List<CommentDto> findCommentsByPostId(long postId);
     CommentDto findCommentsByCommentId(long postId, long commentId);
+    CommentDto updateCommentsByCommentId(long postId, long commentId, CommentDto commentDto);
 }
