@@ -4,6 +4,7 @@ import com.kiran.blog_app_rest.payload.PostDto;
 import com.kiran.blog_app_rest.payload.PostResponse;
 import com.kiran.blog_app_rest.service.PostService;
 import com.kiran.blog_app_rest.utils.AppConstants;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDto> addPost(@RequestBody PostDto postDto){
+    public ResponseEntity<PostDto> addPost(@Valid @RequestBody PostDto postDto){
         log.info("postcontroller executed");
         PostDto resPostDto = postService.addPost(postDto);
         return new ResponseEntity<>(resPostDto, HttpStatus.CREATED);
@@ -47,7 +48,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable("id") long id){
+    public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable("id") long id){
         return new ResponseEntity<>(postService.updatePost(postDto,id),HttpStatus.OK);
     }
 
