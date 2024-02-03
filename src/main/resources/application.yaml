@@ -2,6 +2,8 @@
 server:
   port: 8081
 
+
+
 spring:
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:3306/blog
@@ -11,3 +13,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  security:
+    user:
+      name: kiran
+      password: kiran123
+      roles:
+        - ADMIN
